@@ -69,10 +69,8 @@ func check() (bool, error) {
 }
 
 var (
-	c           = http.Client{Timeout: 5 * time.Second}
-	cookie      string
-	telegramkey string
-	chatID      string
+	c      = http.Client{Timeout: 5 * time.Second}
+	cookie string
 )
 
 func init() {
@@ -80,8 +78,6 @@ func init() {
 	if cookie == "" {
 		panic("你 cookie 呢？")
 	}
-	telegramkey = os.Getenv("telegramkey")
-	chatID = os.Getenv("chatID")
 }
 
 func httpget(url string) ([]byte, error) {
