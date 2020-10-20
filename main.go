@@ -33,7 +33,7 @@ func main() {
 				log.Println(err)
 				continue
 			}
-			if !cansign {
+			if cansign {
 				log.Println("签到失败，尝试重签")
 				continue
 			}
