@@ -40,6 +40,7 @@ func main() {
 			return
 		}
 		log.Println("签过到了")
+		return
 	}
 	panic("签到失败")
 }
