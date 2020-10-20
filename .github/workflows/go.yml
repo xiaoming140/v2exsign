@@ -34,6 +34,4 @@ jobs:
     - name: Start sign
       env:
         v2exCookie: ${{ secrets.v2exCookie }}
-        telegramkey: ${{ secrets.telegramkey }}
-        chatID: ${{ secrets.chatID }}
       run: go run main.go

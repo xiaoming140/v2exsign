@@ -2,15 +2,11 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"regexp"
-	"strings"
 	"time"
 )
 
@@ -45,7 +41,6 @@ func main() {
 		}
 		log.Println("签过到了")
 	}
-	Push("签到失败", chatID, 5)
 	panic("签到失败")
 }
 
@@ -65,7 +60,6 @@ func check() (bool, error) {
 		return false, err
 	}
 	if bytes.Contains(b, []byte(`需要先登录`)) {
-		Push("cookie 失效", chatID, 5)
 		panic("cookie 失效")
 	}
 	if bytes.Contains(b, []byte(`每日登录奖励已领取`)) {
@@ -84,7 +78,6 @@ var (
 func init() {
 	cookie = os.Getenv("v2exCookie")
 	if cookie == "" {
-		Push("你 cookie 呢？", chatID, 5)
 		panic("你 cookie 呢？")
 	}
 	telegramkey = os.Getenv("telegramkey")
@@ -107,53 +100,4 @@ func httpget(url string) ([]byte, error) {
 		return nil, err
 	}
 	return ioutil.ReadAll(rep.Body)
-}
-
-func push(message, chatID string) error {
-	message = url.QueryEscape(message)
-	msg := "chat_id=" + chatID + "&text=" + message
-	req, err := http.NewRequest("POST", telegramkey+"/sendMessage", strings.NewReader(msg))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	reps, err := c.Do(req)
-	if reps != nil {
-		defer reps.Body.Close()
-	}
-	if err != nil {
-		return err
-	}
-	t, err := ioutil.ReadAll(reps.Body)
-	if err != nil {
-		return err
-	}
-	var ok isok
-	json.Unmarshal(t, &ok)
-	if !ok.OK {
-		return Pusherr
-	}
-	return nil
-}
-
-var Pusherr = errors.New("推送失败")
-
-type isok struct {
-	OK bool `json:"ok"`
-}
-
-func Push(message, chatID string, i int) {
-	if telegramkey == "" {
-		return
-	}
-	if i <= 0 {
-		log.Println("推送失败", message)
-		return
-	}
-	err := push(message, chatID)
-	if err != nil {
-		log.Println(err, message)
-		time.Sleep(1 * time.Second)
-		Push(message, chatID, i-1)
-	}
 }
