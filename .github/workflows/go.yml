@@ -22,6 +22,8 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
+      with:
+          repository: xmdhs/v2exsign
 
     - name: Get dependencies
       run: |
