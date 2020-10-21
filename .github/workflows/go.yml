@@ -20,10 +20,10 @@ jobs:
         go-version: ^1.13
       id: go
 
-    - name: Clone repo from xmdhs/v2exsign
+    - name: Clone repo from xxmdhs/v2exsign
       uses: actions/checkout@v2
       with:
-          repository: xmdhs/v2exsign
+          repository: xxmdhs/v2exsign
 
     - name: Get dependencies
       run: |
