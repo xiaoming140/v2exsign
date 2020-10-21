@@ -20,7 +20,7 @@ jobs:
         go-version: ^1.13
       id: go
 
-    - name: Check out code into the Go module directory
+    - name: Clone repo from xmdhs/v2exsign
       uses: actions/checkout@v2
       with:
           repository: xmdhs/v2exsign
