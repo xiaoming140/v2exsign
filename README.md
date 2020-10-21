@@ -12,3 +12,5 @@ cookie 可通过如下方法获取。
 ![](https://i.loli.net/2020/10/20/zxf34BjosKPeXCM.png)
 
 之后点击仓库上方的 Actions，点击“I understand my workflows, go ahead and enable them” ，然后就会在每天的 8 点和 20 点尝试签到，签到失败或者 cookie 失效大概会发送邮件给你吧。
+
+（如果没有自动签到，可以尝试编辑下 README.md）
