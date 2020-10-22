@@ -97,7 +97,7 @@ var (
 func init() {
 	cookie = os.Getenv("v2exCookie")
 	if cookie == "" {
-		//	panic("你 cookie 呢？")
+		panic("你 cookie 呢？")
 	}
 	sckey = os.Getenv("sckey")
 }
