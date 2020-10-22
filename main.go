@@ -155,7 +155,7 @@ func push(msg, key string) error {
 	e := returnmsg{}
 	err = json.Unmarshal(b, &e)
 	if err != nil {
-		return err
+		return fmt.Errorf("push: %w", err)
 	}
 	if e.Errno != 0 {
 		return fmt.Errorf("push: %w", errors.New(e.Errmsg))
