@@ -50,7 +50,7 @@ func main() {
 			log.Println("签到成功")
 			log.Println(msg)
 			if sckey != "" {
-				err := push("签到成功\n"+msg, sckey)
+				err := push("签到成功\n\n"+msg, sckey)
 				if err != nil {
 					log.Println(err)
 					continue
