@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -70,8 +69,7 @@ func getonce() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("getonece: %w", err)
 	}
-	reg := regexp.MustCompile(`/mission/daily/redeem\?once=\d+`)
-	once := reg.Find(b)
+	once := oncereg.Find(b)
 	return string(once), nil
 }
 
@@ -125,20 +123,33 @@ func httpget(url string) ([]byte, error) {
 	return b, nil
 }
 
+var (
+	balancereg = regexp.MustCompile(`的每日登录奖励 ([0-9]{1,4}) 铜币`)
+	oncereg    = regexp.MustCompile(`/mission/daily/redeem\?once=\d+`)
+)
+
 func getbalance() (int, error) {
 	b, err := httpget(`https://www.v2ex.com/balance`)
 	if err != nil {
 		return 0, fmt.Errorf("getbalance: %w", err)
 	}
-	reg := regexp.MustCompile(`的每日登录奖励 [0-9]{1,4} 铜币`)
-	msg := reg.Find(b)
-	reg = regexp.MustCompile(`[0-9]{1,4}`)
-	balance := reg.Find(msg)
-	i, err := strconv.ParseInt(string(balance), 10, 64)
+	temp := balancereg.FindSubmatch(b)
+	if temp == nil {
+		return 0, &NotFind{string(b)}
+	}
+	i, err := strconv.ParseInt(string(temp[1]), 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("getbalance: %w", err)
 	}
 	return int(i), nil
+}
+
+type NotFind struct {
+	msg string
+}
+
+func (n *NotFind) Error() string {
+	return "not find in: " + n.msg
 }
 
 func push(msg, key string) error {
@@ -159,20 +170,24 @@ func push(msg, key string) error {
 	if err != nil {
 		return fmt.Errorf("push: %w", err)
 	}
-	e := returnmsg{}
+	e := Returnmsg{}
 	err = json.Unmarshal(b, &e)
 	if err != nil {
 		return fmt.Errorf("push: %w", err)
 	}
 	if e.Errno != 0 {
-		return fmt.Errorf("push: %w", errors.New(e.Errmsg))
+		return e
 	}
 	return nil
 }
 
 //{"errno":0,"errmsg":"success","dataset":"done"}
 
-type returnmsg struct {
+type Returnmsg struct {
 	Errno  int    `json:"errno"`
 	Errmsg string `json:"errmsg"`
+}
+
+func (r Returnmsg) Error() string {
+	return "code: " + strconv.Itoa(r.Errno) + " msg: " + r.Errmsg
 }
