@@ -160,7 +160,7 @@ func push(msg, key string) error {
 	}
 	reqs.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rep, err := c.Do(reqs)
-	if rep.Body != nil {
+	if rep != nil {
 		defer rep.Body.Close()
 	}
 	if err != nil {
