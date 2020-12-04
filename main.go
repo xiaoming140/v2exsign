@@ -70,8 +70,13 @@ func getonce() (string, error) {
 		return "", fmt.Errorf("getonece: %w", err)
 	}
 	once := oncereg.Find(b)
+	if once == nil {
+		return "", Errnotfind
+	}
 	return string(once), nil
 }
+
+var Errnotfind = fmt.Errorf("没找到")
 
 func check() (bool, error) {
 	b, err := httpget("https://www.v2ex.com/mission/daily")
