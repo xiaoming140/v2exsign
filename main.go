@@ -114,7 +114,7 @@ func httpget(url string) ([]byte, error) {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
 	reqs.Header.Set("Accept", "*/*")
-	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
+	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Linux; Android 10; GM1900) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.86 Mobile Safari/537.36")
 	reqs.Header.Set("Cookie", cookie)
 	rep, err := c.Do(reqs)
 	if rep != nil {
