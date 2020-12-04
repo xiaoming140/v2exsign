@@ -116,11 +116,23 @@ func httpget(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
+	if rep.StatusCode != http.StatusOK {
+		return nil, Errpget{msg: rep.Status, url: url}
+	}
 	b, err := ioutil.ReadAll(rep.Body)
 	if err != nil {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
 	return b, nil
+}
+
+type Errpget struct {
+	msg string
+	url string
+}
+
+func (h Errpget) Error() string {
+	return "not 200: " + h.msg + " " + h.url
 }
 
 var (
