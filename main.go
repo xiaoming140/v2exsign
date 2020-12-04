@@ -50,10 +50,12 @@ func main() {
 			msg := "签到成功，本次签到获得 " + strconv.Itoa(i) + " 铜币。"
 			log.Println(msg)
 			if sckey != "" {
-				err := push(msg, sckey)
-				if err != nil {
-					log.Println(err)
-					continue
+				for i := 0; i < 3; i++ {
+					err := push(msg, sckey)
+					if err != nil {
+						log.Println(err)
+						continue
+					}
 				}
 			}
 			return
@@ -71,14 +73,12 @@ func getonce() (string, error) {
 	}
 	once := oncereg.Find(b)
 	if once == nil {
-		return "", Errnotfind
+		return "", &NotFind{msg: string(b)}
 	}
 	one := string(once)
 	log.Println(one)
 	return one, nil
 }
-
-var Errnotfind = fmt.Errorf("没找到")
 
 func check() (bool, error) {
 	b, err := httpget("https://www.v2ex.com/mission/daily")
