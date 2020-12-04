@@ -73,7 +73,9 @@ func getonce() (string, error) {
 	if once == nil {
 		return "", Errnotfind
 	}
-	return string(once), nil
+	one := string(once)
+	log.Println(one)
+	return one, nil
 }
 
 var Errnotfind = fmt.Errorf("没找到")
